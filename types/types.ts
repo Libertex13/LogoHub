@@ -21,6 +21,7 @@ export interface IconGeneratorContextProps {
   error: string;
   setError: React.Dispatch<React.SetStateAction<string>>;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+  loading: boolean,
 }
 
 export interface IconGeneratorProviderProps {

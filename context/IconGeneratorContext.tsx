@@ -15,11 +15,11 @@ export const IconGeneratorProvider: React.FC<IconGeneratorProviderProps> = ({ ch
   });
   const [imageUrl, setImageUrl] = useState<string>('');
   const [error, setError] = useState<string>('');
-
+ const [loading, setLoading] = useState<boolean>(false);
 
  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
-
+setLoading(true);
   // Get form data
   const formData = new FormData(e.currentTarget);
   const updatedPrompt = {
@@ -32,8 +32,8 @@ export const IconGeneratorProvider: React.FC<IconGeneratorProviderProps> = ({ ch
 
   setPrompt(updatedPrompt);
 
-  const description = `${updatedPrompt.adjective} ${updatedPrompt.noun} in ${updatedPrompt.color} color, style: ${updatedPrompt.style} icon, .ico`;
-  
+  const description = `Design a(n) ${updatedPrompt.adjective} ${updatedPrompt.noun}-themed icon. Use a ${updatedPrompt.color} color palette, styled in a(n) ${updatedPrompt.style} manner. The icon should be visually striking and easily recognizable, suitable for digital interfaces (.ico format).`;
+
   try {
     const response = await fetch('/api/dalle', {
       method: 'POST',
@@ -48,17 +48,20 @@ export const IconGeneratorProvider: React.FC<IconGeneratorProviderProps> = ({ ch
 
     const data = await response.json();
     setImageUrl(data.data[0].url); 
+     setLoading(false); 
   } catch (err: unknown) {
     if (err instanceof Error) {
       setError(err.message);
     } else {
       setError('An error occurred');
+      
     }
+    setLoading(false);
   }
 };
 
   return (
-    <IconGeneratorContext.Provider value={{ prompt, setPrompt, imageUrl, setImageUrl, error, setError, handleSubmit }}>
+    <IconGeneratorContext.Provider value={{ prompt, setPrompt, imageUrl, setImageUrl, error, setError, handleSubmit, loading }}>
       {children}
     </IconGeneratorContext.Provider>
   );
