@@ -1,5 +1,6 @@
 //components\Layout\Navbar.tsx
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Navbar() {
   return (
@@ -10,15 +11,15 @@ export default function Navbar() {
           <div className="text-lg font-semibold">LogoHub</div>
         </div>
         <div className="flex gap-8">
-          <a href="/" className="hover:text-gray-300">
+          <Link href="/" className="hover:text-gray-300">
             Home
-          </a>
-          <a href="#" className="hover:text-gray-300">
+          </Link>
+          <Link href="#" className="hover:text-gray-300">
             MyLogos
-          </a>
-          <a href="/login" className="hover:text-gray-300">
+          </Link>
+          <Link href="/login" className="hover:text-gray-300">
             Login
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
