@@ -1,21 +1,9 @@
 // context/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import supabase from '@/utils/supabase';
-import type { SupabaseClient, User } from '@supabase/supabase-js';
+import type { User } from '@supabase/supabase-js';
+import { AuthContextProps, AuthProviderProps } from '@/types/types';
 
-interface AuthContextProps {
-  supabase: SupabaseClient;
-  user: User | null;
-  refreshSession: () => Promise<void>;
-  getCurrentUser: () => Promise<void>;
-  updateUser: (updates: any) => Promise<void>;
-  signInWithGoogle: () => Promise<void>;
-  signOut: () => Promise<void>;
-}
-
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {

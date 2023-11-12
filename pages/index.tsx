@@ -1,33 +1,20 @@
 //pages\index.tsx
-import React, { useContext } from 'react';
 import { Inter } from 'next/font/google';
-import Image from 'next/image';
-import IconGeneratorForm from '@/components/Layout/Form/IconGeneratorForm';
-import { IconGeneratorContext } from '@/context/IconGeneratorContext';
-
+import IconGeneratorForm from '@/components/Form/IconGeneratorForm';
+import Icon from '@/components/IconLayout';
 const inter = Inter({ subsets: ['latin'] });
 
 const Home: React.FC = () => {
-  const context = useContext(IconGeneratorContext);
-
-  if (!context) {
-    return <div>Error: Context not found</div>;
-  }
-
-  const { imageUrl, error } = context;
-
   return (
     <main
-      className={`flex min-h-screen flex-col items-center p-16 gap-16 ${inter.className}`}
+      className={` min-h-screen items-start p-16 justify-between ${inter.className}`}
     >
-      {/* Form to construct prompt*/}
-      <IconGeneratorForm />
-
-      {/* Display results */}
-      {imageUrl && (
-        <Image src={imageUrl} alt="Generated" width="100" height="100" />
-      )}
-      {error && <p>Error: {error}</p>}
+      <div className="flex flex-col gap-4 lg:flex-row overflow-auto  min-h-full p-4">
+        {/* Form to construct prompt */}
+        <IconGeneratorForm />
+        {/* Display results */}
+        <Icon />
+      </div>
     </main>
   );
 };
