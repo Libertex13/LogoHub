@@ -26,7 +26,7 @@ const colorOptions = [
 const styleOptions = [
   'metallic',
   'polygon',
-  'pixelated',
+  'Pixel-Art',
   'clay',
   'gradient',
   'flat',

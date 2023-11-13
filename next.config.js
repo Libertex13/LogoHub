@@ -2,14 +2,17 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-     remotePatterns: [
+    remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'oaidalleapiprodscus.blob.core.windows.net',
-          },
-    ],
-
+        hostname: 'oaidalleapiprodscus.blob.core.windows.net'
+      },
+      {
+        protocol: 'https',
+        hostname: 'unekyxkpgprmukgaidne.supabase.co'
+      }
+    ]
   }
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

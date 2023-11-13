@@ -1,4 +1,4 @@
-//components\Form\IconGeneratorForm.tsx
+//components\Form\ModelType.tsx
 import React from 'react';
 import { RadioGroup } from '@headlessui/react';
 import { CheckIcon } from '@heroicons/react/20/solid';
