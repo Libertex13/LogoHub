@@ -17,7 +17,7 @@ const IconGeneratorForm: React.FC = () => {
 
   return (
     <div className="border min-h-full border-indigo-600 rounded-md p-4">
-      <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-12" onSubmit={handleSubmit}>
         {/* Describe your icon */}
         <DescribeIcon />
 
@@ -37,12 +37,15 @@ const IconGeneratorForm: React.FC = () => {
             Processing...
           </button>
         ) : (
-          <button
-            type="submit"
-            className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150 "
-          >
-            Generate Image
-          </button>
+          <>
+            <button
+              type="submit"
+              className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150 "
+            >
+              Generate Image
+            </button>
+            <p>DISCLAIMER: Image generation will take about 15 seconds!</p>
+          </>
         )}
       </form>
     </div>

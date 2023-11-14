@@ -11,10 +11,6 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'unekyxkpgprmukgaidne.supabase.co'
       }
-    ],
-    domains: [
-      'oaidalleapiprodscus.blob.core.windows.net',
-      'unekyxkpgprmukgaidne.supabase.co'
     ]
   }
 };

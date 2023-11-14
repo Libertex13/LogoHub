@@ -2,10 +2,12 @@
 import { IconGeneratorContext } from '@/context/IconGeneratorContext';
 import React, { useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
+import Spinner from './Spinner';
 import { useAuth } from '@/context/AuthContext';
 
 export default function Icon() {
-  const { imageUrl, prompt } = useContext(IconGeneratorContext) ?? {};
+  const { imageUrl, prompt, onImageLoaded, loading } =
+    useContext(IconGeneratorContext) ?? {};
   const { saveImage, fetchSavedImages, savedImages } = useAuth();
   const [randomImage, setRandomImage] = useState('');
   const [isRandomImageSet, setIsRandomImageSet] = useState(false);
@@ -33,16 +35,21 @@ export default function Icon() {
 
   return (
     <>
+      {loading && <Spinner />} {/* Show spinner when loading */}
       {imageToDisplay && (
         <div className="relative flex justify-center border min-h-full border-indigo-600 rounded-md p-4">
-          <Image
-            className="shadow-lg hover:shadow-2xl transition-shadow duration-300"
-            src={imageToDisplay}
-            alt="Generated"
-            width={500}
-            height={500}
-            priority
-          />
+          <div className="flex rounded-lg aspect-w-1 aspect-h-1 overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
+            <Image
+              className="shadow-lg hover:shadow-2xl transition-shadow duration-300"
+              onLoad={onImageLoaded}
+              src={imageToDisplay}
+              alt="Generated"
+              width={500}
+              height={500}
+              style={{ aspectRatio: '1 / 1' }}
+              priority
+            />
+          </div>
           {imageUrl && (
             <button
               onClick={handleSave}

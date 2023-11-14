@@ -12,15 +12,13 @@ export const IconGeneratorProvider: React.FC<IconGeneratorProviderProps> = ({
   children
 }) => {
   const [prompt, setPrompt] = useState({
-    noun: 'aa',
-    adjective: 'bb',
-    color: 'cc',
-    model: 'aa',
-    style: 'aa'
+    noun: '',
+    adjective: '',
+    color: '',
+    model: '',
+    style: ''
   });
-  const [imageUrl, setImageUrl] = useState<string>(
-    'https://oaidalleapiprodscus.blob.core.windows.net/private/org-h6mfhN51kT50HXCQGkQZwj6B/user-xxzBgZ3P9mjfdFbg6aSzDHIV/img-2lKySub4liv45tzO8ZCB2UwD.png?st=2023-11-13T16%3A09%3A11Z&se=2023-11-13T18%3A09%3A11Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-13T17%3A09%3A11Z&ske=2023-11-14T17%3A09%3A11Z&sks=b&skv=2021-08-06&sig=pbgx0K9Ix/Jw8/VCyyByZ0iwlkm0XxUvkBYMVsmAOTs%3D'
-  );
+  const [imageUrl, setImageUrl] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -58,15 +56,16 @@ export const IconGeneratorProvider: React.FC<IconGeneratorProviderProps> = ({
 
       const data = await response.json();
       setImageUrl(data.data[0].url);
-      setLoading(false);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
         setError('An error occurred');
       }
-      setLoading(false);
     }
+  };
+  const onImageLoaded = () => {
+    setLoading(false);
   };
 
   return (
@@ -79,7 +78,8 @@ export const IconGeneratorProvider: React.FC<IconGeneratorProviderProps> = ({
         error,
         setError,
         handleSubmit,
-        loading
+        loading,
+        onImageLoaded
       }}
     >
       {children}

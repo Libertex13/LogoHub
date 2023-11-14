@@ -77,14 +77,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       throw new Error('No authenticated user found.');
     }
 
-    const userId = user.id;
-    const uniqueFileName = fileName || `image-${new Date().getTime()}.png`; // Default file extension can be changed based on blob type
+    try {
+      const userId = user.id;
+      const uniqueFileName = fileName || `image-${new Date().getTime()}.png`; // Default file extension can be changed based on blob type
 
-    const response = await supabase.storage
-      .from('images')
-      .upload(`${userId}/${uniqueFileName}`, blob);
+      const response = await supabase.storage
+        .from('images')
+        .upload(`${userId}/${uniqueFileName}`, blob);
 
-    return response;
+      return response;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      throw error; // Re-throw the error after logging it, or handle it as needed
+    }
   };
 
   const createSignedUrl = async (filePath: string): Promise<string | null> => {
@@ -105,7 +110,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return null;
       }
 
-      return data.signedUrl; // Assuming 'data' has a 'signedUrl' property
+      return data.signedUrl;
     } catch (error) {
       console.error('Error in createSignedUrl:', error);
       return null;
