@@ -20,7 +20,7 @@ Follow these steps to set up the project locally:
 ### Clone the Repository:
 
 ```bash
-git clone https://github.com/your-username/LogoHub.git
+git clone https://github.com/Libertex13/logohub.git
 cd LogoHub
 ```
 
