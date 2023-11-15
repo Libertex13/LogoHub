@@ -12,7 +12,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Layout>
         <Head>
           <title>LogoHub: Create your Logo!</title>
-          <meta property="og:title" content="My page title" key="title" />
+          <meta
+            property="og:title"
+            content="LogoHub: Create your Logo!"
+            key="title"
+          />
         </Head>
         <IconGeneratorProvider>
           <Component {...pageProps} />

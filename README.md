@@ -1,40 +1,69 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# LogoHub: AI-Powered Logo Generator
+
+**LogoHub** is an innovative project leveraging AI technology to create unique
+logos. Built using Next.js and integrating OpenAI's advanced API, it offers an
+intuitive platform for users to generate logos powered by artificial
+intelligence.
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- Node.js (version 12 or later)
+- Git
+- A code editor (like VSCode)
 
 ## Getting Started
 
-First, run the development server:
+Follow these steps to set up the project locally:
+
+### Clone the Repository:
+
+```bash
+git clone https://github.com/your-username/LogoHub.git
+cd LogoHub
+```
+
+### Install Dependencies:
+
+```bash
+npm install
+```
+
+### Set Up Environment Variables:
+
+You need to set up the following environment variables:
+
+- OPENAI_API_KEY: Your OpenAI API key for AI functionalities.
+- NEXT_PUBLIC_SUPABASE_URL: The URL to your Supabase project.
+- NEXT_PUBLIC_SUPABASE_PUBLIC_KEY: The public API key for your Supabase project.
+- GOOGLE_CLIENT_SECRET: The client secret key for Google OAuth.
+
+Create a `.env.local` file in the root of the project and add the above
+variables:
+
+`OPENAI_API_KEY=your_openai_api_key`
+`NEXT_PUBLIC_SUPABASE_URL=your_supabase_url`
+`NEXT_PUBLIC_SUPABASE_PUBLIC_KEY=your_supabase_public_key`
+`GOOGLE_CLIENT_SECRET=your_google_client_secret`
+
+### Run the Development Server:
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000` with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Additional Information
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- The project is structured using the standard Next.js framework.
+- Supabase is used for authentication and database services.
+- The OpenAI API is used for generating AI-based logos.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Contributing
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Contributions are welcome! If you're a student working on this project, feel
+free to fork the repository, make changes, and create a pull request.

@@ -1,6 +1,6 @@
 //components\IconLayout.tsx
 import { IconGeneratorContext } from '@/context/IconGeneratorContext';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import Image from 'next/image';
 import Spinner from './Spinner';
 import { useAuth } from '@/context/AuthContext';
@@ -8,22 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 export default function Icon() {
   const { imageUrl, prompt, onImageLoaded, loading } =
     useContext(IconGeneratorContext) ?? {};
-  const { saveImage, fetchSavedImages, savedImages } = useAuth();
-  const [randomImage, setRandomImage] = useState('');
-  const [isRandomImageSet, setIsRandomImageSet] = useState(false);
-
-  useEffect(() => {
-    fetchSavedImages();
-  }, [fetchSavedImages]);
-
-  useEffect(() => {
-    if (!imageUrl && savedImages.length > 0 && !isRandomImageSet) {
-      // Pick a random image from savedImages
-      const randomIndex = Math.floor(Math.random() * savedImages.length);
-      setRandomImage(savedImages[randomIndex].image_url);
-      setIsRandomImageSet(true); // Ensure the random image is set only once
-    }
-  }, [imageUrl, savedImages, isRandomImageSet]);
+  const { saveImage } = useAuth();
 
   const handleSave = () => {
     if (imageUrl && prompt && prompt.model) {
@@ -31,18 +16,16 @@ export default function Icon() {
     }
   };
 
-  const imageToDisplay = imageUrl || randomImage;
-
   return (
     <>
       {loading && <Spinner />} {/* Show spinner when loading */}
-      {imageToDisplay && (
+      {imageUrl && (
         <div className="relative flex justify-center border min-h-full border-indigo-600 rounded-md p-4">
           <div className="flex rounded-lg aspect-w-1 aspect-h-1 overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
             <Image
               className="shadow-lg hover:shadow-2xl transition-shadow duration-300"
               onLoad={onImageLoaded}
-              src={imageToDisplay}
+              src={imageUrl}
               alt="Generated"
               width={500}
               height={500}
