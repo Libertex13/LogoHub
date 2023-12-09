@@ -8,6 +8,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 const Home: React.FC = () => {
   const { user } = useAuth();
+
   return (
     <main className={` min-h-screen  p-8 md:px-16 lg:px-24 ${inter.className}`}>
       <p className="flex  justify-center gap-4 px-4">

@@ -5,6 +5,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { IconGeneratorProvider } from '../context/IconGeneratorContext';
 import Head from 'next/head';
 import Layout from '@/components/Layout/Layout';
+import { Toaster } from 'react-hot-toast';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -19,6 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           />
         </Head>
         <IconGeneratorProvider>
+          <Toaster />
           <Component {...pageProps} />
         </IconGeneratorProvider>
       </Layout>

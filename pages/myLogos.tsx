@@ -59,9 +59,7 @@ export default function MyLogos() {
           >
             Dall-e 3
           </Tab>
-          {/* ... other model tabs ... */}
         </Tab.List>
-        {/* ... rest of the component ... */}
       </Tab.Group>
 
       {/* Image Grid */}

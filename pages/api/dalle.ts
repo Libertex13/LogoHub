@@ -36,7 +36,6 @@ export default async function handler(
   }
 
   try {
-    console.log(req.body);
     const { prompt, model } = req.body;
 
     if (!prompt) {
@@ -45,7 +44,7 @@ export default async function handler(
     }
 
     const imageResponse = await dalleRequest(prompt, model);
-    console.log(imageResponse);
+
     res.status(200).json(imageResponse);
   } catch (error) {
     console.error('Error in DALL-E request:', error);

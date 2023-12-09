@@ -3,11 +3,13 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import supabase from '@/utils/supabase';
 import type { User } from '@supabase/supabase-js';
 import { AuthContextProps, AuthProviderProps, SavedImage } from '@/types/types';
+import toast from 'react-hot-toast';
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const [credits, setCredits] = useState<number | null>(null);
   const [savedImages, setSavedImages] = useState<SavedImage[]>([]);
 
   useEffect(() => {
@@ -36,6 +38,35 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(data?.session?.user || null);
   };
 
+  const getCredits = async (): Promise<number | null> => {
+    if (!user) {
+      console.log('No user found, skipping credits fetch');
+      return null;
+    }
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('credits')
+      .eq('id', user.id)
+      .single();
+
+    if (error) {
+      console.error('Error fetching credits:', error);
+      return null;
+    } else {
+      setCredits(data?.credits ?? null);
+      return data?.credits ?? null;
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      getCredits();
+    } else {
+      setCredits(0);
+    }
+  }, [user]);
+
   const getCurrentUser = async () => {
     const { data } = await supabase.auth.getUser();
     setUser(data?.user || null);
@@ -48,6 +79,28 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const decreaseCredits = async (amount: number) => {
+    if (!user) {
+      throw new Error('No authenticated user found.');
+    }
+
+    try {
+      const response = await supabase.rpc('decrease_credits', {
+        user_id: user.id,
+        amount: amount
+      });
+
+      if (response.data) {
+        setCredits((prevCredits) =>
+          prevCredits ? prevCredits - amount : null
+        );
+      }
+    } catch (error) {
+      console.error('Error decreasing credits:', error);
+      throw error;
+    }
+  };
+
   const signInWithGoogle = async () => {
     await supabase.auth.signInWithOAuth({ provider: 'google' });
   };
@@ -57,21 +110,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(null);
   };
 
-  async function downloadImage(imageUrl: string) {
+  async function downloadImage(imageUrl: string, model: string) {
     try {
-      console.log('invalid Imageurl  ' + imageUrl);
       const response = await fetch(
         `/api/fetch-image?imageUrl=${encodeURIComponent(imageUrl)}`
       );
       if (!response.ok) {
         throw new Error('Image fetch failed');
       }
+
       return await response.blob();
     } catch (error) {
-      console.error('Error downloading image:', error);
+      toast.error('Failed to download image.');
     }
   }
-
   const uploadImage = async (blob: Blob, fileName: string): Promise<any> => {
     if (!user) {
       throw new Error('No authenticated user found.');
@@ -119,39 +171,37 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const saveImage = async (imageUrl: string, prompt: object, model: string) => {
     if (user) {
-      const blob = await downloadImage(imageUrl);
-      if (!blob) {
-        console.error('Failed to download image or image is undefined');
-        return;
-      }
-
-      const fileName = `img-${new Date().getTime()}.png`;
-      await uploadImage(blob, fileName);
-
-      const filePath = `${user.id}/${fileName}`;
-      const signedUrl = await createSignedUrl(filePath);
-      if (!signedUrl) {
-        console.error('Failed to create signed URL');
-        return;
-      }
-
-      const response = await supabase.from('saved_images').insert([
-        {
-          user_id: user.id,
-          image_url: signedUrl,
-          prompt: JSON.stringify(prompt),
-          model: model
+      try {
+        const blob = await downloadImage(imageUrl, model);
+        if (!blob) {
+          console.error('Failed to download image or image is undefined');
+          return;
         }
-      ]);
 
-      // For debugging: Log the response and the data sent
-      console.log('Response:', response);
-      console.log('Data sent:', {
-        user_id: user.id,
-        image_url: signedUrl,
-        prompt: JSON.stringify(prompt),
-        model: model
-      });
+        const fileName = `img-${new Date().getTime()}.png`;
+        const uploadResponse = await uploadImage(blob, fileName);
+
+        if (!uploadResponse.error) {
+          const filePath = `${user.id}/${fileName}`;
+          const signedUrl = await createSignedUrl(filePath);
+          if (!signedUrl) {
+            console.error('Failed to create signed URL');
+            return;
+          }
+
+          await supabase.from('saved_images').insert([
+            {
+              user_id: user.id,
+              image_url: signedUrl,
+              prompt: JSON.stringify(prompt),
+              model: model
+            }
+          ]);
+          return toast.success('Image saved successfully!');
+        }
+      } catch (error) {
+        console.error('Error in saving image:', error);
+      }
     }
   };
 
@@ -182,7 +232,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         signOut,
         saveImage,
         fetchSavedImages,
-        savedImages
+        savedImages,
+        credits,
+        getCredits,
+        decreaseCredits
       }}
     >
       {children}

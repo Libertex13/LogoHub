@@ -2,9 +2,11 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, credits } = useAuth();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -41,8 +43,17 @@ export default function Navbar() {
         {/* Links */}
         <div className={`flex gap-8 ${isOpen ? 'block' : 'hidden'} md:flex`}>
           <Link href="/">Home</Link>
-          <Link href="/myLogos">MyLogos</Link>
-          <Link href="/login">Login</Link>
+          <Link href="/credits">Credits: {credits} </Link>
+          {user ? (
+            <div
+              className={`flex gap-8 ${isOpen ? 'block' : 'hidden'} md:flex`}
+            >
+              <Link href="/myLogos">MyLogos</Link>
+              <Link href="/login">Sign out</Link>
+            </div>
+          ) : (
+            <Link href="/login">Login</Link>
+          )}
         </div>
       </div>
     </nav>

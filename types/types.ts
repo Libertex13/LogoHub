@@ -34,9 +34,12 @@ export interface AuthContextProps {
   updateUser: (updates: any) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
-  saveImage: (imageUrl: string, prompt: Prompt, model: string) => Promise<void>;
+  saveImage: (imageUrl: string, prompt: object, model: string) => Promise<void>;
   fetchSavedImages: () => Promise<void>;
   savedImages: SavedImage[];
+  credits: number | null;
+  getCredits: () => Promise<number | null>;
+  decreaseCredits: (amount: number) => Promise<any>; // Add this line
 }
 
 export interface AuthProviderProps {

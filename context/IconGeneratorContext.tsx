@@ -4,6 +4,8 @@ import {
   IconGeneratorContextProps,
   IconGeneratorProviderProps
 } from '@/types/types';
+import { useAuth } from './AuthContext';
+import toast from 'react-hot-toast';
 
 export const IconGeneratorContext =
   createContext<IconGeneratorContextProps | null>(null);
@@ -21,10 +23,19 @@ export const IconGeneratorProvider: React.FC<IconGeneratorProviderProps> = ({
   const [imageUrl, setImageUrl] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const { user, decreaseCredits, getCredits } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!user) {
+      console.log('No user found, skipping image generation');
+      toast.error('Please log in to generate images.');
+      return;
+    }
+
     setLoading(true);
+
     // Get form data
     const formData = new FormData(e.currentTarget);
     const updatedPrompt = {
@@ -37,7 +48,17 @@ export const IconGeneratorProvider: React.FC<IconGeneratorProviderProps> = ({
 
     setPrompt(updatedPrompt);
 
-    const description = `Design an ${updatedPrompt.adjective} ${updatedPrompt.noun}-themed icon. Use a ${updatedPrompt.color} color palette, styled in a ${updatedPrompt.style} manner. The icon should be visually striking and easily recognizable, suitable for digital interfaces (.ico format). The design should emphasize visual recognizability and convey the adjective of ${updatedPrompt.adjective} effectively, making it instantly recognizable at a glance.`;
+    // Check current credits
+    const currentCredits = await getCredits();
+    const decreaseAmount = updatedPrompt.model === 'dall-e-3' ? 2 : 1;
+
+    if (currentCredits === null || currentCredits < decreaseAmount) {
+      toast.error('Insufficient credits to generate this image.');
+      setLoading(false);
+      return;
+    }
+
+    const description = `Design an ${updatedPrompt.adjective} ${updatedPrompt.noun}-themed icon. Use a ${updatedPrompt.color} color palette, styled in a ${updatedPrompt.style} manner.`;
 
     try {
       const response = await fetch('/api/dalle', {
@@ -50,17 +71,25 @@ export const IconGeneratorProvider: React.FC<IconGeneratorProviderProps> = ({
           model: updatedPrompt.model
         })
       });
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
 
       const data = await response.json();
       setImageUrl(data.data[0].url);
+
+      // Decrease credits
+      await decreaseCredits(decreaseAmount);
+      toast.success('Image generated successfully. Credits deducted.');
     } catch (err: unknown) {
+      setLoading(false);
       if (err instanceof Error) {
         setError(err.message);
+        toast.error(`Failed to generate image: ${err.message}`);
       } else {
-        setError('An error occurred');
+        setError('An unknown error occurred');
+        toast.error('Failed to generate image due to an unknown error.');
       }
     }
   };
