@@ -197,7 +197,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
               model: model
             }
           ]);
-          return toast.success('Image saved successfully!');
+          toast.success('Image saved successfully!');
         }
       } catch (error) {
         console.error('Error in saving image:', error);
