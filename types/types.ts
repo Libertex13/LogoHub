@@ -37,9 +37,10 @@ export interface AuthContextProps {
   saveImage: (imageUrl: string, prompt: object, model: string) => Promise<void>;
   fetchSavedImages: () => Promise<void>;
   savedImages: SavedImage[];
+  loadingSave: boolean;
   credits: number | null;
   getCredits: () => Promise<number | null>;
-  decreaseCredits: (amount: number) => Promise<any>; // Add this line
+  decreaseCredits: (amount: number) => Promise<any>;
 }
 
 export interface AuthProviderProps {

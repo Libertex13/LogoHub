@@ -27,16 +27,15 @@ export const IconGeneratorProvider: React.FC<IconGeneratorProviderProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     if (!user) {
       console.log('No user found, skipping image generation');
       toast.error('Please log in to generate images.');
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
-
-    // Get form data
     const formData = new FormData(e.currentTarget);
     const updatedPrompt = {
       noun: formData.get('noun') as string,
@@ -46,9 +45,20 @@ export const IconGeneratorProvider: React.FC<IconGeneratorProviderProps> = ({
       style: formData.get('style') as string
     };
 
+    if (
+      !updatedPrompt.noun ||
+      !updatedPrompt.adjective ||
+      !updatedPrompt.color ||
+      !updatedPrompt.model ||
+      !updatedPrompt.style
+    ) {
+      toast.error('Please fill in all the fields.');
+      setLoading(false);
+      return;
+    }
+
     setPrompt(updatedPrompt);
 
-    // Check current credits
     const currentCredits = await getCredits();
     const decreaseAmount = updatedPrompt.model === 'dall-e-3' ? 2 : 1;
 
@@ -78,12 +88,9 @@ export const IconGeneratorProvider: React.FC<IconGeneratorProviderProps> = ({
 
       const data = await response.json();
       setImageUrl(data.data[0].url);
-
-      // Decrease credits
       await decreaseCredits(decreaseAmount);
       toast.success('Image generated successfully. Credits deducted.');
     } catch (err: unknown) {
-      setLoading(false);
       if (err instanceof Error) {
         setError(err.message);
         toast.error(`Failed to generate image: ${err.message}`);
@@ -91,8 +98,11 @@ export const IconGeneratorProvider: React.FC<IconGeneratorProviderProps> = ({
         setError('An unknown error occurred');
         toast.error('Failed to generate image due to an unknown error.');
       }
+    } finally {
+      setLoading(false);
     }
   };
+
   const onImageLoaded = () => {
     setLoading(false);
   };

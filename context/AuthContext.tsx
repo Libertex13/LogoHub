@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [credits, setCredits] = useState<number | null>(null);
   const [savedImages, setSavedImages] = useState<SavedImage[]>([]);
+  const [loadingSave, setLoadingSave] = useState<boolean>(false);
 
   useEffect(() => {
     const initializeSession = async () => {
@@ -171,6 +172,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const saveImage = async (imageUrl: string, prompt: object, model: string) => {
     if (user) {
+      setLoadingSave(true);
       try {
         const blob = await downloadImage(imageUrl, model);
         if (!blob) {
@@ -202,6 +204,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       } catch (error) {
         console.error('Error in saving image:', error);
       }
+      setLoadingSave(false);
     }
   };
 
@@ -234,6 +237,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         fetchSavedImages,
         savedImages,
         credits,
+        loadingSave,
         getCredits,
         decreaseCredits
       }}
