@@ -17,7 +17,7 @@ const IconGeneratorForm: React.FC = () => {
 
   return (
     <div className="border min-h-full border-indigo-600 rounded-md p-4">
-      <form className="flex flex-col gap-12" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-4 sm:gap-12" onSubmit={handleSubmit}>
         {/* Describe your icon */}
         <DescribeIcon />
 
