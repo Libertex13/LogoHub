@@ -42,7 +42,7 @@ export default function Navbar() {
 
         {/* Links */}
         <div
-          className={`absolute top-16 right-0 mt-2 w-fit bg-indigo-600 p-2 rounded-lg shadow-md md:shadow-none md:bg-transparent md:p-0 md:rounded-none md:static md:flex ${
+          className={`absolute top-16 right-0 mt-2 w-fit bg-indigo-600 p-2 rounded-lg gap-4 shadow-md md:shadow-none md:bg-transparent md:p-0 md:rounded-none md:static md:flex ${
             isOpen ? 'flex flex-col gap-2' : 'hidden'
           }`}
         >
